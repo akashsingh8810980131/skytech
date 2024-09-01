@@ -2,7 +2,7 @@ document.getElementById('fetchButton').addEventListener('click', fetchUserName);
 
 function fetchUserName() {
   const userId = document.getElementById('userIdInput').value;
-  fetch('data.json')
+  fetch('https://raw.githubusercontent.com/akashsingh8810980131/skytech/main/data.json')
     .then(response => response.json())
     .then(data => {
       const user = data.find(user => user.id === parseInt(userId));
