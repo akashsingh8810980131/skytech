@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <link rel="icon" href="favicon-32x32.png" sizes="32x32" type="image/png">
+  <link rel="icon" href="images.jpeg" sizes="16x16" type="image/png">
+    <meta charset="UTF-8">
+    <meta name="theme-color" content="#ff0000">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Habit Tracker</title>
+    <style>
+   
+    
+        body {
+          width:100% auto;
+          height:100% auto;
+            font-family: Arial, sans-serif;
+            background-color: black;
+            margin: 0;
+            padding: 20px;
+            background-size: cover;
+        }
+
+        .progress-container {
+            width: 100%;
+            background-color: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 10px;
+            margin-bottom: 20px;
+            overflow: hidden;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            height: 25px; /* सभी तत्वों की समान ऊँचाई */
+            display: inline-block; /* सीध में रखने के लिए */
+            vertical-align: middle; /* ऊर्ध्वाधर रूप से केंद्रित रखने के लिए */
+        }
+
+        .progress-bar {
+            width: 0%;
+            height: 30px;
+            
+            text-align: center;
+            color: white;
+            line-height: 25px; /* ऊर्ध्वाधर रूप से केंद्रित रखने के लिए */
+            font-weight: bold;
+            transition: width 0.5s ease, background 0.5s ease;
+        }
+
+        .red {
+            background: red;
+            box-shadow: 0 0 15px red;
+        }
+
+        .yellow {
+            background: orangered;
+            box-shadow: 0 0 15px orangered;
+        }
+
+        .green {
+            background: green;
+            box-shadow: 0 0 15px green;
+        }
+
+        .lime {
+            background: lime;
+            box-shadow: 0 0 15px lime;
+        }
+
+        .progress-bar.animated {
+            animation: blink 1s infinite alternate;
+        }
+
+        @keyframes blink {
+            0% { opacity: 0.7; }
+            100% { opacity: 1; }
+        }
+
+        .subject-title {
+            margin-bottom: 15px;
+            padding: 0px;
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 1.2em;
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5);
+            display: inline-block; /* सीध में रखने के लिए */
+            vertical-align: middle; /* ऊर्ध्वाधर रूप से केंद्रित रखने के लिए */
+            height: 0px;
+            line-height: 0px; /* ऊर्ध्वाधर रूप से केंद्रित रखने के लिए */
+        }
+
+        .chapter-info {
+            font-size: 1em;
+            margin-top: -50px;
+            display: inline-block; /* सीध में रखने के लिए */
+            vertical-align: middle; /* ऊर्ध्वाधर रूप से केंद्रित रखने के लिए */
+            height: 0px;
+            line-height: 10px;
+            font-weight: bold;/* ऊर्ध्वाधर रूप से केंद्रित रखने के लिए */
+            color: red; /* आरंभिक रंग */
+        }
+
+        /* Progrss Info के रंग */
+        .info-red {
+            color: red;
+        }
+
+        .info-yellow {
+            color: orangered;
+        }
+
+        .info-green {
+            color: green;
+        }
+
+        .info-lime {
+            color: lime;
+        }
+
+        /* /21 days के लिए विशेष रंग */
+        .always-lime {
+            color: lime;
+        }
+
+    </style>
+</head>
+<body>
+
+    <!-- केवल Habit विषय और उसकी प्रगति बार -->
+    <div class="progress-wrapper">
+        <h3 class="subject-title">Habit</h3>
+        <div class="progress-container">
+            <div class="progress-bar" id="habit-progress">0%</div>
+        </div>
+        <span class="chapter-info" id="habit-days-info">0/<span class="always-lime">21 days</span></span>
+    </div>
+
+    <script>
+        function updateProgress(subject, completed, total) {
+            const percent = (completed / total) * 100;
+            const bar = document.getElementById(subject);
+            bar.style.width = percent + '%';
+            bar.textContent = percent.toFixed(5) + '%'; // दशमलव के 5 अंकों तक प्रगति दिखाना
+
+            // प्रगति के अनुसार रंग बदलना
+            if (percent <= 20) {
+                bar.className = 'progress-bar red animated';
+            } else if (percent <= 50) {
+                bar.className = 'progress-bar yellow animated';
+            } else {
+                bar.className = 'progress-bar green animated';
+            }
+        }
+
+        function updateHabitProgress() {
+            const startDate = new Date('2024-08-30T00:00:00'); // गणना 30 अगस्त से शुरू होती है
+            const today = new Date();
+            const hourDifference = (today - startDate) / (1000 * 60 * 60); // घंटे की गणना
+
+            const totalHours = 504; // 21 दिन के बराबर घंटे
+            const hoursCompleted = Math.min(hourDifference, totalHours); // 504 घंटे से अधिक नहीं हो सकते
+
+            const daysCompleted = Math.floor(hoursCompleted / 24); // दिनों में बदलना
+
+            updateProgress('habit-progress', hoursCompleted, totalHours);
+            
+            const info = document.getElementById('habit-days-info');
+            info.innerHTML = `${daysCompleted}/<span class="always-lime">21 days</span>`;
+
+            // Chapter info के रंग बदलना
+            if (daysCompleted <= 6) {
+                info.className = 'chapter-info info-red';
+            } else if (daysCompleted <= 15) {
+                info.className = 'chapter-info info-yellow';
+            } else if (daysCompleted <= 20) {
+                info.className = 'chapter-info info-green';
+            } else {
+                info.className = 'chapter-info info-lime';
+            }
+        }
+
+        // हर सेकंड में Habit प्रगति को लाइव अपडेट करना
+        setInterval(updateHabitProgress, 1000);
+    </script>
+
+</body>
+</html>
